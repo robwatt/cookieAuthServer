@@ -139,6 +139,15 @@ app.get('/authrequired', (req, res) => {
   }
 });
 
+app.get('/authrequired2', (req, res) => {
+  console.log('is authenticated', req.isAuthenticated());
+  if (req.isAuthenticated()) {
+    res.send(`you hit the 2nd endpoint that requires authentication: ${req.user.email}\n`);
+  } else {
+    res.redirect('/');
+  }
+});
+
 // tell the server what port to listen on
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
