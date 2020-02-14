@@ -15,7 +15,8 @@ const fs = require('fs');
 // const allowedOrigins = ['https://localhost:4000', 'https://localhost:3000', 'http://localhost:4000'];
 
 // this needs to be set to some property value so when deployed it will continue to work
-const dbServer = 'http://localhost:5000';
+const dbServer = process.env.DBSERVER || 'http://localhost:5000';
+const port = process.env.PORT || 4000;
 
 // configure passport.js to use the local strategy
 passport.use(
@@ -47,7 +48,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   axios
-    .get(`http://localhost:5000/users/${id}`)
+    .get(`${dbServer}/users/${id}`)
     .then(res => done(null, res.data))
     .catch(error => done(error, false));
 });
@@ -137,8 +138,6 @@ app.get('/authrequired', (req, res) => {
     res.redirect('/');
   }
 });
-
-var port = process.env.port || 3000;
 
 // tell the server what port to listen on
 app.listen(port, () => {
