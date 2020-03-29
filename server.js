@@ -1,8 +1,8 @@
 //npm modules
 const express = require('express');
 const uuid = require('uuid/v4');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+// const session = require('express-session');
+// const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
+const cookieSession = require('cookie-session');
 
 // const allowedOrigins = ['https://localhost:4000', 'https://localhost:3000', 'http://localhost:4000'];
 
@@ -59,25 +60,33 @@ const app = express();
 // add & configure middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(
-  session({
-    genid: req => {
-      console.log('Inside session middleware genid function');
-      console.log(`Request object sessionID from client: ${req}, ${req.sessionID}`);
-      const value = uuid();
-      return value; // use UUIDs for session IDs
-    },
-    store: new FileStore(),
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    // cookie: {
-    //   secure: true,
-    //   sameSite: 'none',
-    //   maxAge: 720000000
-    // }
-  })
-);
+app.use(cookieSession({
+  name: 'session',
+  keys: ['keyboard cat'],
+  maxAge: 720000000,
+  secure: true,
+  sameSite: 'none'
+}));
+
+// app.use(
+//   session({
+//     genid: req => {
+//       console.log('Inside session middleware genid function');
+//       console.log(`Request object sessionID from client: ${req}, ${req.sessionID}`);
+//       const value = uuid();
+//       return value; // use UUIDs for session IDs
+//     },
+//     store: new FileStore(),
+//     secret: 'keyboard cat',
+//     resave: false,
+//     saveUninitialized: true,
+//     // cookie: {
+//     //   secure: true,
+//     //   sameSite: 'none',
+//     //   maxAge: 720000000
+//     // }
+//   })
+// );
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(
