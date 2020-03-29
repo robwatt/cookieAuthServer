@@ -63,18 +63,19 @@ app.use(
   session({
     genid: req => {
       console.log('Inside session middleware genid function');
-      console.log(`Request object sessionID from client: ${req.sessionID}`);
-      return uuid(); // use UUIDs for session IDs
+      console.log(`Request object sessionID from client: ${req}, ${req.sessionID}`);
+      const value = uuid();
+      return value; // use UUIDs for session IDs
     },
     store: new FileStore(),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: {
-      secure: true,
-      sameSite: 'none',
-      maxAge: 720000000
-    }
+    // cookie: {
+    //   secure: true,
+    //   sameSite: 'none',
+    //   maxAge: 720000000
+    // }
   })
 );
 app.use(passport.initialize());
