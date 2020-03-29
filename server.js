@@ -22,7 +22,7 @@ const port = process.env.PORT || 4000;
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     axios
-      .get(`${dbServer}/users?email=${email}`)
+      .get(`${dbServer}/users?email=${email.toLowerCase()}`)
       .then(res => {
         const user = res.data[0];
         console.log('user', user);
@@ -70,6 +70,11 @@ app.use(
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
+    cookie: {
+      secure: true,
+      sameSite: 'none',
+      maxAge: 720000000
+    }
   })
 );
 app.use(passport.initialize());
@@ -144,7 +149,7 @@ app.get('/authrequired2', (req, res) => {
   if (req.isAuthenticated()) {
     res.send(`you hit the 2nd endpoint that requires authentication: ${req.user.email}\n`);
   } else {
-    res.redirect('/');
+    res.send('you are not logged in');
   }
 });
 
