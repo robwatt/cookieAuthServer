@@ -11,7 +11,6 @@ const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
-const cookieSession = require('cookie-session');
 
 // const allowedOrigins = ['https://localhost:4000', 'https://localhost:3000', 'http://localhost:4000'];
 
@@ -60,13 +59,6 @@ const app = express();
 // add & configure middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cookieSession({
-//   name: 'session',
-//   secret: 'keyboard cat',
-//   maxAge: 720000000,
-//   secure: true,
-//   sameSite: 'none'
-// }));
 app.set('trust proxy', true);
 app.use(
   session({
